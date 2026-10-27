@@ -1,0 +1,192 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Ôn tập KTGK-2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Bitter:wght@600;700&display=swap">
+<style>
+/* Layout: một cột hẹp, mỗi lần một câu; thanh tiến độ dính trên cùng; kết quả là danh sách xem lại. */
+:root{
+  --bg:#f3f5f1; --surface:#ffffff; --fg:#1d2620; --muted:#5d6b61; --line:#d9dfd6;
+  --accent:#2d5a3d; --accent-fg:#ffffff; --accent-soft:#e3ede4;
+  --ok:#1f7a3f; --ok-soft:#ddf1e3; --bad:#b3261e; --bad-soft:#f9e1de;
+  --font-body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Bitter",Georgia,serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121814; --surface:#1b231d; --fg:#e6ece7; --muted:#9aa89e; --line:#2f3a32;
+  --accent:#7cc590; --accent-fg:#0f1a12; --accent-soft:#233229;
+  --ok:#6fd08c; --ok-soft:#1d3a27; --bad:#ff8a80; --bad-soft:#42201d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121814; --surface:#1b231d; --fg:#e6ece7; --muted:#9aa89e; --line:#2f3a32;
+  --accent:#7cc590; --accent-fg:#0f1a12; --accent-soft:#233229;
+  --ok:#6fd08c; --ok-soft:#1d3a27; --bad:#ff8a80; --bad-soft:#42201d; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--font-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:720px;margin:0 auto}
+h1,h2{font-family:var(--font-display);line-height:1.2;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 18px;font-weight:600;min-height:46px}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.muted{color:var(--muted)}
+/* home */
+.home{padding-top:48px;display:flex;flex-direction:column;gap:22px}
+.home h1{font-size:clamp(28px,7vw,40px)}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:14px}
+.hist{border-top:1px solid var(--line);padding-top:18px}
+.hist h2{font-size:18px;margin-bottom:10px}
+.hist ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.hist li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+/* quiz */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 10px;border-bottom:1px solid var(--line)}
+.top-row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
+.qn{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:22px 0 6px}
+.qt{font-family:var(--font-display);font-size:clamp(19px,4.6vw,24px);line-height:1.35;margin:0 0 18px;font-weight:600}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;min-height:54px}
+.opt .l{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:14px}
+.opt .tx{min-width:0;overflow-wrap:anywhere}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .l{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .l{background:var(--ok);color:var(--bg);border-color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.opt.bad .l{background:var(--bad);color:var(--bg);border-color:var(--bad)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}
+.navbar{margin-top:26px;border-top:1px solid var(--line);padding-top:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px;margin:12px 0 16px}
+.grid button{height:40px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:14px;font-variant-numeric:tabular-nums;padding:0}
+.grid button.done{background:var(--accent-soft);border-color:var(--accent)}
+.grid button.cur{outline:2px solid var(--fg);outline-offset:1px}
+.grid button.ok{background:var(--ok-soft);border-color:var(--ok)}
+.grid button.bad{background:var(--bad-soft);border-color:var(--bad)}
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:20px;z-index:20}
+.modal{background:var(--surface);border-radius:14px;padding:22px;max-width:420px;width:100%;display:flex;flex-direction:column;gap:16px}
+/* result */
+.res{padding-top:36px;display:flex;flex-direction:column;gap:18px}
+.score{font-family:var(--font-display);font-size:clamp(44px,14vw,72px);line-height:1;font-weight:700;font-variant-numeric:tabular-nums}
+.score small{font-size:.4em;color:var(--muted);font-weight:600}
+.rv{border-top:1px solid var(--line);padding:18px 0;display:flex;flex-direction:column;gap:10px}
+.rv .tag{font-size:13px;font-weight:600}
+.rv .tag.ok{color:var(--ok)}.rv .tag.bad{color:var(--bad)}
+.rv .qt{font-size:18px;margin:0}
+.rv .opts{gap:8px}
+.rv .opt{cursor:default;min-height:0;padding:10px 12px}
+.switch{display:flex;gap:8px;align-items:center}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .2s}}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+const DATA = [{"n": 1, "q": "Lực lượng vũ trang nhân dân Việt Nam bao gồm những thành phần cơ bản nào?", "o": ["Quân đội nhân dân, Công an nhân dân và Dân quân tự vệ.", "Quân đội chủ lực, Bộ đội biên phòng và Cảnh sát biển.", "Lực lượng An ninh, Lực lượng Cảnh sát và Dự bị động viên.", "Quân đội nhân dân, Dân quân tự vệ và Cảnh sát giao thông."]}, {"n": 2, "q": "Tổ chức nào sau đây là tiền thân trực tiếp của Quân đội nhân dân Việt Nam?", "o": ["Đội Việt Nam Tuyên truyền Giải phóng quân.", "Đội Tự vệ đỏ Nghệ Tĩnh.", "Đội Du kích Bắc Sơn.", "Cứu quốc quân."]}, {"n": 3, "q": "Đội Việt Nam Tuyên truyền Giải phóng quân được thành lập vào ngày tháng năm nào?", "o": ["Ngày 22/12/1944.", "Ngày 19/8/1945.", "Ngày 28/3/1935.", "Ngày 22/12/1945."]}, {"n": 4, "q": "Khi mới thành lập, Đội Việt Nam Tuyên truyền Giải phóng quân gồm bao nhiêu chiến sĩ và do ai chỉ huy?", "o": ["34 chiến sĩ – do đồng chí Võ Nguyên Giáp trực tiếp chỉ huy.", "34 chiến sĩ – do đồng chí Trường Chinh chỉ huy.", "36 chiến sĩ – do đồng chí Hoàng Văn Thái chỉ huy.", "30 chiến sĩ – do đồng chí Phạm Văn Đồng chỉ huy."]}, {"n": 5, "q": "Tên gọi của Quân đội ta trong giai đoạn từ tháng 11/1945 đến tháng 5/1946 là gì?", "o": ["Vệ quốc đoàn.", "Việt Nam Giải phóng quân.", "Quân đội Quốc gia Việt Nam.", "Quân đội nhân dân Việt Nam."]}, {"n": 6, "q": "Tên gọi chính thức 'Quân đội nhân dân Việt Nam' được sử dụng bắt đầu từ năm nào?", "o": ["Năm 1950.", "Năm 1945.", "Năm 1946.", "Năm 1954."]}, {"n": 7, "q": "Chiến dịch lịch sử nào của Quân đội nhân dân Việt Nam được đánh giá là 'lừng lẫy năm châu, chấn động địa cầu'?", "o": ["Chiến dịch Điện Biên Phủ năm 1954.", "Chiến dịch Việt Bắc thu - đông 1947.", "Chiến dịch Biên giới năm 1950.", "Chiến dịch Hồ Chí Minh năm 1975."]}, {"n": 8, "q": "Bản chất giai cấp của Quân đội nhân dân và Công an nhân dân Việt Nam là gì?", "o": ["Bản chất của giai cấp công nhân.", "Bản chất của giai cấp nông dân.", "Bản chất của tầng lớp trí thức cách mạng.", "Bản chất của tiểu tư sản dân tộc."]}, {"n": 9, "q": "Ngày truyền thống chính thức của Công an nhân dân Việt Nam là ngày nào?", "o": ["Ngày 19 tháng 8 hằng năm.", "Ngày 22 tháng 12 hằng năm.", "Ngày 28 tháng 3 hằng năm.", "Ngày 02 tháng 9 hằng năm."]}, {"n": 10, "q": "Trong giai đoạn 1930 - 1945, tổ chức nào sau đây là tiền thân của Công an nhân dân Việt Nam?", "o": ["Các đội Tự vệ đỏ, Tự vệ công nông, Danh dự trừ gian, Danh dự Việt Minh.", "Đội Việt Nam Tuyên truyền Giải phóng quân.", "Đội Du kích Ba Tơ.", "Vệ quốc đoàn."]}, {"n": 11, "q": "Ngày truyền thống hằng năm của lực lượng Dân quân tự vệ Việt Nam là ngày nào?", "o": ["Ngày 28 tháng 3 hằng năm.", "Ngày 22 tháng 12 hằng năm.", "Ngày 19 tháng 8 hằng năm.", "Ngày 19 tháng 12 hằng năm."]}, {"n": 12, "q": "Sự kiện nào đánh dấu sự ra đời chính thức của lực lượng Dân quân tự vệ Việt Nam?", "o": ["Đại hội toàn quốc lần thứ nhất của Đảng thông qua 'Nghị quyết về Đội tự vệ' (28/3/1935).", "Phong trào Xô viết Nghệ Tĩnh năm 1930.", "Cuộc Khởi nghĩa Nam Kì năm 1940.", "Lời kêu gọi Toàn quốc kháng chiến năm 1946."]}, {"n": 13, "q": "Cách đánh nào là sở trường đặc sắc và di sản vô giá của lực lượng Dân quân tự vệ Việt Nam?", "o": ["Cách đánh du kích.", "Tác chiến hiệp đồng quân binh chủng.", "Đánh trận địa chiến quy mô lớn.", "Đánh vu hồi bằng cơ giới đường bộ."]}, {"n": 14, "q": "Lực lượng vũ trang nhân dân Việt Nam đặt dưới sự lãnh đạo như thế nào của Đảng Cộng sản Việt Nam?", "o": ["Lãnh đạo tuyệt đối, trực tiếp về mọi mặt.", "Lãnh đạo gián tiếp thông qua Ủy ban Quốc phòng.", "Phối hợp lãnh đạo cùng Mặt trận Tổ quốc.", "Lãnh đạo trên một số lĩnh vực quân sự trọng yếu."]}, {"n": 15, "q": "Truyền thống hàng đầu tiêu biểu cho bản chất cách mạng của Quân đội nhân dân Việt Nam là gì?", "o": ["Trung thành vô hạn với Tổ quốc Việt Nam xã hội chủ nghĩa, với Đảng, Nhà nước và Nhân dân.", "Độc lập, tự chủ, tự lực, tự cường.", "Kỉ luật tự giác, nghiêm minh.", "Đoàn kết quốc tế trong sáng, thuỷ chung."]}, {"n": 16, "q": "Mục tiêu chiến đấu cao nhất của Quân đội nhân dân Việt Nam được xác định là gì?", "o": ["Vì độc lập tự do của Tổ quốc, vì chủ nghĩa xã hội, vì hạnh phúc của nhân dân.", "Vì sự phát triển kinh tế thị trường định hướng xã hội chủ nghĩa.", "Vì mục tiêu mở rộng lãnh thổ và ảnh hưởng quốc tế.", "Vì quyền lợi riêng của lực lượng vũ trang nhân dân."]}, {"n": 17, "q": "Trong kháng chiến chống Mỹ cứu nước, đại thắng mùa Xuân năm 1975 đỉnh cao là chiến dịch nào?", "o": ["Chiến dịch Hồ Chí Minh.", "Chiến dịch Tây Nguyên.", "Chiến dịch Huế - Đà Nẵng.", "Chiến dịch Đường 9 - Nam Lào."]}, {"n": 18, "q": "Lực lượng Công an nhân dân Việt Nam gồm hai thành phần lực lượng chính nào?", "o": ["Lực lượng An ninh nhân dân và Lực lượng Cảnh sát nhân dân.", "Lực lượng An ninh mạng và Lực lượng Phòng cháy chữa cháy.", "Lực lượng Cảnh sát giao thông và Lực lượng Cảnh sát hình sự.", "Lực lượng Cảnh sát cơ động và Lực lượng Bộ đội biên phòng."]}, {"n": 19, "q": "Chức năng cốt lõi của lực lượng Dân quân tự vệ Việt Nam ở địa phương là gì?", "o": ["Vừa lao động sản xuất, vừa sẵn sàng chiến đấu, bảo vệ an ninh trật tự ở cơ sở.", "Tập trung hoàn toàn vào việc huấn luyện quân sự chuyên nghiệp.", "Chỉ thực hiện nhiệm vụ khi có chiến tranh xảy ra.", "Quản lý hành chính và thu thuế tại địa phương."]}, {"n": 20, "q": "Mối quan hệ giữa Lực lượng vũ trang nhân dân với Nhân dân Việt Nam được miêu tả như thế nào?", "o": ["Mối quan hệ đoàn kết gắn bó máu thịt 'như cá với nước'.", "Mối quan hệ quản lý và chấp hành đơn thuần.", "Mối quan hệ hợp tác kinh tế thương mại.", "Mối quan hệ hỗ trợ hành chính khi có yêu cầu."]}, {"n": 21, "q": "Truyền thống 'Quyết chiến, quyết thắng' của Quân đội nhân dân Việt Nam phản ánh điều gì?", "o": ["Tinh thần dũng cảm, kiên cường, không lùi bước trước mọi kẻ thù xâm lược.", "Khả năng trang bị vũ khí hiện đại bậc nhất thế giới.", "Số lượng quân số đông đảo vượt trội so với đối phương.", "Chiến thuật phòng ngự thụ động trên toàn tuyến."]}, {"n": 22, "q": "Một trong những truyền thống quý báu của Công an nhân dân Việt Nam là gì?", "o": ["Vì nước quên thân, vì dân phục vụ.", "Tự do tuyệt đối trong thực thi nhiệm vụ.", "Ưu tiên phát triển kinh tế thương mại.", "Chỉ tuân theo mệnh lệnh của cấp ủy địa phương."]}, {"n": 23, "q": "Truyền thống của Dân quân tự vệ Việt Nam thể hiện rõ nét qua phẩm chất nào?", "o": ["Cần cù, sáng tạo, kiên cường, bám trụ bảo vệ quê hương.", "Tính quy chuẩn và chính quy hoá tuyệt đối.", "Sử dụng thành thạo khí tài quân sự hạng nặng.", "Hoạt động biệt lập không phụ thuộc vào chính quyền địa phương."]}, {"n": 24, "q": "Tổ chức Dân quân tự vệ được thành lập ở đâu?", "o": ["Ở xã, phường, thị trấn, cơ quan, tổ chức.", "Chỉ thành lập ở các khu vực biên giới hải đảo.", "Chỉ thành lập trong các doanh nghiệp nhà nước.", "Chỉ thành lập trong các trường đại học."]}, {"n": 25, "q": "Chiến công đầu tiên của Đội Việt Nam Tuyên truyền Giải phóng quân sau khi thành lập là gì?", "o": ["Chiến thắng Phai Khắt và Nà Ngần.", "Chiến thắng Đông Khê.", "Chiến thắng Bắc Sơn.", "Chiến thắng Ba Tơ."]}, {"n": 26, "q": "Người chỉ huy đầu tiên của Đội Việt Nam Tuyên truyền Giải phóng quân là ai?", "o": ["Đồng chí Võ Nguyên Giáp.", "Đồng chí Nguyễn Chí Thanh.", "Đồng chí Văn Tiến Dũng.", "Đồng chí Trần Đại Nghĩa."]}, {"n": 27, "q": "Hai nhiệm vụ chiến lược của toàn Đảng, toàn dân và toàn quân ta hiện nay là gì?", "o": ["Xây dựng chủ nghĩa xã hội và bảo vệ vững chắc Tổ quốc Việt Nam xã hội chủ nghĩa.", "Phát triển kinh tế và mở rộng quan hệ đối ngoại.", "Đô thị hoá toàn quốc và nâng cao thu nhập bình quân.", "Hội nhập kinh tế quốc tế và hiện đại hoá hạ tầng."]}, {"n": 28, "q": "Nguyên tắc lãnh đạo của Đảng Cộng sản Việt Nam đối với Lực lượng vũ trang nhân dân là:", "o": ["Tuyệt đối, trực tiếp về mọi mặt.", "Hiệp thương dân chủ.", "Phân cấp tự chủ hoàn toàn.", "Ủy quyền cho các bộ ngành."]}, {"n": 29, "q": "Sức mạnh của Lực lượng vũ trang nhân dân Việt Nam bắt nguồn từ đâu?", "o": ["Từ sức mạnh của khối đại đoàn kết toàn dân tộc và sự lãnh đạo của Đảng.", "Chỉ từ số lượng vũ khí trang bị hiện đại.", "Từ viện trợ quân sự bên ngoài.", "Từ nguồn tài chính dồi dào của ngân sách."]}, {"n": 30, "q": "Lực lượng vũ trang nhân dân Việt Nam là công lực chủ yếu của ai?", "o": ["Của Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam và của Nhân dân.", "Của riêng các cơ quan hành pháp.", "Của các tập đoàn kinh tế nhà nước.", "Của các tổ chức quốc tế tại Việt Nam."]}, {"n": 31, "q": "Luật Giáo dục quốc phòng và an ninh được Quốc hội nước CHXHCN Việt Nam thông qua vào năm nào?", "o": ["Năm 2013.", "Năm 2015.", "Năm 2018.", "Năm 2020."]}, {"n": 32, "q": "Cơ quan nào giữ vai trò quản lý nhà nước về giáo dục quốc phòng và an ninh trên phạm vi cả nước?", "o": ["Chính phủ.", "Bộ Quốc phòng.", "Bộ Giáo dục và Đào tạo.", "Bộ Công an."]}, {"n": 33, "q": "Luật Sĩ quan Quân đội nhân dân Việt Nam được ban hành lần đầu vào năm nào?", "o": ["Năm 1999.", "Năm 1989.", "Năm 2005.", "Năm 2014."]}, {"n": 34, "q": "Sĩ quan Quân đội nhân dân Việt Nam là cán bộ của Đảng và Nhà nước, hoạt động trong lĩnh vực nào?", "o": ["Lĩnh vực quân sự.", "Lĩnh vực ngoại giao.", "Lĩnh vực kinh tế thương mại.", "Lĩnh vực văn hoá nghệ thuật."]}, {"n": 35, "q": "Luật Công an nhân dân hiện hành được Quốc hội thông qua vào năm nào?", "o": ["Năm 2018.", "Năm 2011.", "Năm 2015.", "Năm 2020."]}, {"n": 36, "q": "Cấp bậc hàm cao nhất đối với sĩ quan Công an nhân dân giữ chức vụ Bộ trưởng Bộ Công an là gì?", "o": ["Đại tướng.", "Thượng tướng.", "Trung tướng.", "Thiếu tướng."]}, {"n": 37, "q": "Độ tuổi đăng ký nghĩa vụ quân sự lần đầu đối với công dân nam theo Luật Nghĩa vụ quân sự 2015 là bao nhiêu?", "o": ["Đủ 17 tuổi.", "Đủ 18 tuổi.", "Đủ 16 tuổi.", "Đủ 20 tuổi."]}, {"n": 38, "q": "Độ tuổi gọi nhập ngũ thông thường trong thời bình đối với công dân nam là từ bao nhiêu tuổi?", "o": ["Từ đủ 18 tuổi đến hết 25 tuổi.", "Từ đủ 18 tuổi đến hết 27 tuổi.", "Từ đủ 20 tuổi đến hết 30 tuổi.", "Từ đủ 17 tuổi đến hết 22 tuổi."]}, {"n": 39, "q": "Đối với công dân nam được đào tạo trình độ cao đẳng, đại học đã hoãn gọi nhập ngũ, độ tuổi gọi nhập ngũ kéo dài đến bao nhiêu tuổi?", "o": ["Đến hết 27 tuổi.", "Đến hết 25 tuổi.", "Đến hết 30 tuổi.", "Đến hết 28 tuổi."]}, {"n": 40, "q": "Thời hạn phục vụ tại ngũ trong thời bình của hạ sĩ quan, binh sĩ là bao nhiêu tháng?", "o": ["24 tháng.", "18 tháng.", "12 tháng.", "36 tháng."]}, {"n": 41, "q": "Luật Dân quân tự vệ hiện hành được Quốc hội nước CHXHCN Việt Nam thông qua vào năm nào?", "o": ["Năm 2019.", "Năm 2015.", "Năm 2010.", "Năm 2022."]}, {"n": 42, "q": "Độ tuổi thực hiện nghĩa vụ tham gia Dân quân tự vệ trong thời bình đối với công dân nam là từ bao nhiêu tuổi?", "o": ["Từ đủ 18 tuổi đến hết 45 tuổi.", "Từ đủ 18 tuổi đến hết 35 tuổi.", "Từ đủ 20 tuổi đến hết 50 tuổi.", "Từ đủ 18 tuổi đến hết 27 tuổi."]}, {"n": 43, "q": "Luật Cảnh sát biển Việt Nam được Quốc hội thông qua vào năm nào?", "o": ["Năm 2018.", "Năm 2012.", "Năm 2015.", "Năm 2021."]}, {"n": 44, "q": "Cảnh sát biển Việt Nam là lực lượng vũ trang nhân dân, lực lượng chuyên trách của Nhà nước làm nòng cốt chấp hành pháp luật ở đâu?", "o": ["Trên các vùng biển và hải đảo của Việt Nam.", "Trong nội địa các tỉnh biên giới.", "Tại các vùng trời quốc gia.", "Tại các cảng hàng không quốc tế."]}, {"n": 45, "q": "Luật Quốc phòng năm 2018 quy định quốc phòng là công cuộc gì?", "o": ["Công cuộc giữ nước bằng sức mạnh tổng hợp của toàn dân tộc, trong đó lực lượng vũ trang nhân dân làm nòng cốt.", "Hoạt động vũ trang thuần túy của Quân đội nhân dân.", "Công tác đảm bảo an ninh trật tự đô thị.", "Hoạt động ngoại giao quân sự đa phương."]}, {"n": 46, "q": "Luật Biên giới quốc gia được Quốc hội thông qua vào năm nào?", "o": ["Năm 2003.", "Năm 1999.", "Năm 2010.", "Năm 2018."]}, {"n": 47, "q": "Luật An ninh quốc gia năm 2004 quy định an ninh quốc gia là gì?", "o": ["Sự ổn định, phát triển bền vững của chế độ xã hội chủ nghĩa và Nhà nước, sự xâm phạm độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ.", "Trạng thái không có tai nạn giao thông trên đường bộ.", "Sự phát triển của hệ thống ngân hàng tài chính.", "An toàn vệ sinh thực phẩm trên thị trường."]}, {"n": 48, "q": "Hành vi nào sau đây bị nghiêm cấm theo Luật Giáo dục quốc phòng và an ninh?", "o": ["Trốn tránh, cản trở việc thực hiện giáo dục quốc phòng và an ninh.", "Tham gia các khóa học quốc phòng an ninh theo quy định.", "Tuyên truyền đường lối quốc phòng của Đảng.", "Học tập thao tác bắn súng tiểu liên AK."]}, {"n": 49, "q": "Công dân có trách nhiệm gì đối với nhiệm vụ quốc phòng và an ninh?", "o": ["Trung thành với Tổ quốc, làm nghĩa vụ quân sự, tham gia xây dựng nền quốc phòng toàn dân.", "Chỉ cần nộp thuế đầy đủ cho nhà nước.", "Chỉ tham gia khi có chiến tranh xảy ra.", "Được miễn hoàn toàn nghĩa vụ quân sự nếu làm việc tại doanh nghiệp."]}, {"n": 50, "q": "Hệ thống cấp bậc hàm của sĩ quan Quân đội nhân dân Việt Nam gồm mấy cấp?", "o": ["4 cấp (Tướng, Tá, Úy, Hạ sĩ quan).", "3 cấp (Tướng, Tá, Úy).", "5 cấp (Tướng, Tá, Úy, Hạ sĩ quan, Binh sĩ).", "2 cấp (Tướng và Úy)."]}, {"n": 51, "q": "Theo quy định pháp luật Việt Nam, chất ma tuý được hiểu là gì?", "o": ["Các chất gây nghiện, chất hướng thần được quy định trong danh mục do Chính phủ ban hành.", "Mọi loại dung dịch hoá chất dùng trong phòng thí nghiệm.", "Các loại thuốc kháng sinh mạnh mua ở hiệu thuốc.", "Các loại đồ uống có cồn nồng độ cao."]}, {"n": 52, "q": "Chất gây nghiện được định nghĩa là chất:", "o": ["Kích thích hoặc ức chế thần kinh, dễ gây tình trạng nghiện đối với người sử dụng.", "Giảm đau tức thời không gây tác dụng phụ.", "Chỉ ảnh hưởng đến hệ tiêu hóa.", "Tăng cường trí nhớ cho người dùng."]}, {"n": 53, "q": "Cơ quan nào có thẩm quyền ban hành Danh mục chất ma tuý và tiền chất ma tuý ở Việt Nam?", "o": ["Chính phủ.", "Bộ Y tế.", "Bộ Công an.", "Bộ Tư pháp."]}, {"n": 54, "q": "Tiền chất ma tuý là gì?", "o": ["Hoá chất không thể thiếu trong quá trình điều chế, sản xuất chất ma tuý được quy định trong danh mục do Chính phủ ban hành.", "Sản phẩm tự nhiên không chứa độc tố.", "Thuốc bổ hỗ trợ phục hồi sức khỏe.", "Dung dịch vệ sinh công nghiệp thông thường."]}, {"n": 55, "q": "Loại cây nào sau đây thuộc danh mục cây có chứa chất ma tuý?", "o": ["Cây thuốc phiện, cây cần sa, cây coca.", "Cây cà phê, cây chè, cây ca cao.", "Cây cao su, cây keo, cây bạch đàn.", "Cây đinh lăng, cây ngải cứu, cây tam thất."]}, {"n": 56, "q": "Các tội phạm về ma tuý được quy định tại Chương nào của Bộ luật Hình sự năm 2015?", "o": ["Chương XX (Các tội phạm về ma tuý).", "Chương XIV (Các tội xâm phạm tính mạng).", "Chương XV (Các tội xâm phạm quyền tự do).", "Chương XXI (Các tội xâm phạm an toàn công cộng)."]}, {"n": 57, "q": "Theo Luật Xử lí vi phạm hành chính, biện pháp nào sau đây được áp dụng đối với người nghiện ma tuý từ đủ 18 tuổi trở lên?", "o": ["Đưa vào cơ sở cai nghiện bắt buộc.", "Phạt tiền và cho về nhà tự quản lý.", "Buộc lao động công ích tại phường.", "Tước quyền công dân tạm thời."]}, {"n": 58, "q": "Tác hại trực tiếp của ma tuý đối với sức khoẻ người nghiện là gì?", "o": ["Gây tổn hại nghiêm trọng hệ thần kinh, hệ tiêu hóa, tuần hoàn và dễ dẫn đến lây nhiễm HIV/AIDS.", "Tăng cường khả năng miễn dịch của cơ thể.", "Giúp cơ thể phát triển chiều cao nhanh chóng.", "Ổn định nhịp tim và huyết áp."]}, {"n": 59, "q": "Một trong những tác hại của ma tuý đối với trật tự, an toàn xã hội là:", "o": ["Gia tăng các loại tội phạm như trộm cắp, cướp giật, giết người để lấy tiền mua ma tuý.", "Thúc đẩy phong trào thể thao phát triển.", "Nâng cao ý thức chấp hành luật giao thông.", "Giảm thiểu tình trạng thất nghiệp."]}, {"n": 60, "q": "Đối với nền kinh tế quốc gia, tệ nạn ma tuý gây ra tác hại gì?", "o": ["Làm suy giảm lực lượng lao động và tốn kém ngân sách nhà nước cho công tác phòng chống, cai nghiện.", "Tăng nguồn thu thuế cho ngân sách nhà nước.", "Thu hút vốn đầu tư nước ngoài.", "Thúc đẩy xuất khẩu nông sản."]}, {"n": 61, "q": "Dấu hiệu sinh hoạt điển hình nhận biết người nghiện ma tuý là gì?", "o": ["Thường xuyên thức khuya, tụ tập bạn xấu, tính khí thất thường, tiêu xài nhiều tiền bất minh.", "Dậy sớm tập thể dục và ăn uống điều độ.", "Học hành ngày càng tiến bộ vượt bậc.", "Tích cực tham gia hoạt động đoàn thể."]}, {"n": 62, "q": "Ma tuý tổng hợp thế hệ mới hiện nay thường được ngụy trang dưới những hình thức nào để tiếp cận giới trẻ?", "o": ["Tem giấy (bùa lưỡi), nấm thần, cỏ Mỹ, bóng cười, kẹo, trà sữa chứa ma tuý.", "Sách giáo khoa và vở viết học sinh.", "Đồng phục nhà trường.", "Dụng cụ thể thao ngoài trời."]}, {"n": 63, "q": "Nguyên nhân chủ quan chủ yếu dẫn đến nguy cơ nghiện ma tuý ở học sinh là gì?", "o": ["Tò mò, muốn tìm cảm giác lạ, muốn thể hiện bản thân hoặc bị bạn xấu lôi kéo.", "Do nhà trường tổ chức ngoại khóa pháp luật.", "Do gia đình quan tâm chăm sóc chu đáo.", "Do tham gia tích cực các câu lạc bộ thể thao."]}, {"n": 64, "q": "Trách nhiệm quan trọng nhất của học sinh trong phòng, chống ma tuý là gì?", "o": ["Tuyệt đối không sử dụng ma tuý dưới bất kỳ hình thức nào và chủ động tố giác vi phạm.", "Thử một lần cho biết để tránh bị bạn bè chê bai.", "Cất giấu hộ bạn khi bạn nhờ giữ chất lạ.", "Tự ý đi truy bắt kẻ mua bán ma tuý."]}, {"n": 65, "q": "Văn bản nào quy định cụ thể về việc xử phạt vi phạm hành chính trong lĩnh vực phòng, chống ma tuý?", "o": ["Nghị định số 282/2025/NĐ-CP.", "Luật Đất đai.", "Luật Doanh nghiệp.", "Luật Bảo vệ môi trường."]}, {"n": 66, "q": "Khi phát hiện bạn học có biểu hiện tàng trữ hoặc sử dụng ma tuý, học sinh cần làm gì?", "o": ["Báo cáo ngay với thầy cô giáo, nhà trường hoặc cơ quan công an nơi gần nhất.", "Giữ bí mật để bảo vệ tình bạn.", "Đe dọa bạn để lấy tiền.", "Bỏ học để tránh liên lụy."]}, {"n": 67, "q": "Cơ quan nào có thẩm quyền xác định tình trạng nghiện ma tuý của một cá nhân?", "o": ["Cơ sở y tế đủ điều kiện theo quy định pháp luật.", "Ủy ban nhân dân cấp xã.", "Trường học nơi học sinh đang theo học.", "Hội đồng nhân dân cấp huyện."]}, {"n": 68, "q": "Hiện nay, hành vi trồng các loại cây có chứa chất ma tuý bị xử lý như thế nào?", "o": ["Bị nghiêm cấm và xử lý vi phạm hành chính hoặc truy cứu trách nhiệm hình sự.", "Được khuyến khích trồng trong vườn nhà.", "Chỉ bị nhắc nhở nhẹ nhàng.", "Được cấp phép kinh doanh tự do."]}, {"n": 69, "q": "Một trong những hình thức tuyên truyền phòng chống ma tuý hiệu quả trong trường học là:", "o": ["Tổ chức hội thi, diễn đàn, sinh hoạt chuyên đề nâng cao nhận thức pháp luật.", "Cấm học sinh tìm hiểu thông tin về ma tuý.", "Cho học sinh tiếp xúc trực tiếp với chất ma tuý.", "Bỏ qua các giờ học kĩ năng sống."]}, {"n": 70, "q": "Học sinh có hành vi mua bán, vận chuyển ma tuý sẽ bị xử lý như thế nào?", "o": ["Bị xử lý nghiêm minh theo quy định của pháp luật hình sự hoặc hành chính.", "Chỉ bị khiển trách nội bộ gia đình.", "Được miễn hoàn toàn trách nhiệm vì còn nhỏ.", "Chỉ phải chép phạt nội quy trường."]}, {"n": 71, "q": "Vi phạm pháp luật về trật tự, an toàn giao thông là gì?", "o": ["Là hành vi trái pháp luật, có lỗi do người có năng lực trách nhiệm hành vi thực hiện, xâm phạm đến trật tự, an toàn giao thông.", "Là mọi sự cố kỹ thuật xảy ra đối với phương tiện giao thông trên đường.", "Là hành vi tham gia giao thông vào giờ cao điểm gây ùn tắc cục bộ.", "Là việc sửa chữa đường sá của cơ quan quản lý giao thông."]}, {"n": 72, "q": "Trật tự, an toàn giao thông được hiểu là trạng thái xã hội như thế nào?", "o": ["Là trạng thái xã hội hình thành do các quy tắc pháp lý điều chỉnh hoạt động giao thông, bảo đảm giao thông thông suốt, an toàn.", "Là việc cấm hoàn toàn tất cả phương tiện lưu thông trên đường.", "Là việc miễn xử phạt cho người vi phạm giao thông lần đầu.", "Là việc chỉ cho phép xe ưu tiên di chuyển trong thành phố."]}, {"n": 73, "q": "Căn cứ vào tính chất, mức độ nguy hiểm cho xã hội, vi phạm pháp luật về trật tự an toàn giao thông được chia thành mấy dạng chính?", "o": ["2 dạng: Vi phạm hành chính và Vi phạm hình sự (Tội phạm giao thông).", "3 dạng: Vi phạm dân sự, vi phạm kỉ luật và vi phạm kinh tế.", "4 dạng: Vi phạm nhẹ, vi phạm trung bình, vi phạm nặng và cực kỳ nặng.", "1 dạng duy nhất là vi phạm hành chính."]}, {"n": 74, "q": "Vi phạm hành chính về trật tự, an toàn giao thông là hành vi có đặc điểm gì?", "o": ["Là hành vi vi phạm quy tắc giao thông nhưng chưa đến mức truy cứu trách nhiệm hình sự.", "Là hành vi gây hậu quả đặc biệt nghiêm trọng làm chết nhiều người.", "Là hành vi phá hủy công trình giao thông trọng điểm quốc gia.", "Là hành vi đua xe trái phép gây hậu quả thảm khốc."]}, {"n": 75, "q": "Hành vi nào sau đây cấu thành tội phạm (vi phạm hình sự) về trật tự an toàn giao thông?", "o": ["Vi phạm quy định về tham gia giao thông đường bộ gây hậu quả nghiêm trọng về người và tài sản.", "Đỗ xe ô tô không đúng nơi quy định nhưng không gây ra tai nạn.", "Quên không mang theo Giấy phép lái xe khi điều khiển xe máy.", "Đi bộ sai làn đường nhưng chưa gây tai nạn giao thông."]}, {"n": 76, "q": "Đâu là nguyên nhân chủ quan hàng đầu dẫn đến các vi phạm pháp luật về trật tự an toàn giao thông?", "o": ["Ý thức chấp hành pháp luật về giao thông kém, thiếu hiểu biết và sự chủ quan của người tham gia giao thông.", "Thời tiết xấu như mưa bão, sương mù dày đặc.", "Hệ thống biển báo giao thông bị mờ.", "Mặt đường bị xuống cấp, xuất hiện nhiều ổ gà."]}, {"n": 77, "q": "Yếu tố nào sau đây thuộc về nguyên nhân khách quan của vi phạm pháp luật về trật tự an toàn giao thông?", "o": ["Hạ tầng giao thông chưa đồng bộ, công tác quản lý và xử lý vi phạm đôi lúc còn hạn chế.", "Người điều khiển xe uống rượu bia rồi lái xe.", "Hành vi phóng nhanh, vượt ẩu, giành đường.", "Hành vi chở quá số người quy định."]}, {"n": 78, "q": "Trách nhiệm pháp lý áp dụng đối với người thực hiện hành vi vi phạm hành chính về trật tự an toàn giao thông chủ yếu là gì?", "o": ["Phạt tiền, tước quyền sử dụng giấy phép lái xe có thời hạn hoặc tạm giữ phương tiện.", "Phạt tù có thời hạn hoặc tù chung thân.", "Buộc bồi thường thiệt hại kinh tế hàng tỷ đồng.", "Phạt cải tạo không giam giữ tại doanh nghiệp."]}, {"n": 79, "q": "Đối tượng nào sau đây phải chịu trách nhiệm về hành vi vi phạm pháp luật về trật tự an toàn giao thông?", "o": ["Người có năng lực trách nhiệm pháp lý thực hiện hành vi vi phạm do lỗi cố ý hoặc vô ý.", "Chỉ có người điều khiển xe ô tô chở khách.", "Chỉ có những người từ đủ 30 tuổi trở lên.", "Người bị ép buộc tham gia giao thông."]}, {"n": 80, "q": "Nhận thức đúng đắn về vi phạm pháp luật về trật tự an toàn giao thông có ý nghĩa gì đối với học sinh?", "o": ["Giúp học sinh tự giác chấp hành luật, phòng tránh tai nạn và nâng cao trách nhiệm thượng tôn pháp luật.", "Giúp học sinh tìm cách đối phó với lực lượng Cảnh sát giao thông.", "Giúp học sinh điều khiển xe máy phân khối lớn khi chưa đủ tuổi.", "Giúp học sinh miễn trừ các hình phạt khi vi phạm."]}];
+const LET = ["A","B","C","D"];
+const KEY = "ktgk2_history_v1";
+const app = document.getElementById("app");
+let S = null; // {items, ans, cur}
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function loadHist(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
+function saveHist(r){try{const h=loadHist();h.unshift(r);localStorage.setItem(KEY,JSON.stringify(h.slice(0,30)))}catch(e){}}
+function el(tag,attrs,...kids){const e=document.createElement(tag);
+  for(const k in (attrs||{})){const v=attrs[k];if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v===true)e.setAttribute(k,"");else if(v!==false&&v!=null)e.setAttribute(k,v)}
+  for(const c of kids.flat()){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c))}return e}
+function fmt(ts){const d=new Date(ts);return d.toLocaleDateString("vi-VN")+" "+d.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})}
+function mount(...n){app.replaceChildren(...n);window.scrollTo(0,0)}
+
+function start(){
+  const items = shuffle(DATA).map(q=>({n:q.n,q:q.q,opts:shuffle(q.o.map((t,i)=>({t,c:i===0})))}));
+  S = {items, ans:items.map(()=>null), cur:0};
+  renderQuiz();
+}
+
+function renderHome(){
+  const h = loadHist();
+  const best = h.length?Math.max(...h.map(x=>x.score)):null;
+  mount(el("div",{class:"home"},
+    el("h1",null,"Ôn tập KTGK-2"),
+    el("p",{class:"muted"},"80 câu trắc nghiệm về lực lượng vũ trang, pháp luật quốc phòng, phòng chống ma tuý và trật tự an toàn giao thông. Mỗi lần làm, thứ tự câu và vị trí A, B, C, D được xáo trộn."),
+    el("div",{class:"stats"},el("span",{class:"chip"},"80 câu"),el("span",{class:"chip"},"Chọn 1 đáp án"),best!=null?el("span",{class:"chip"},"Cao nhất: "+best+"/80"):null),
+    el("div",{class:"row"},el("button",{class:"btn primary",onclick:start},"Bắt đầu làm bài")),
+    h.length?el("div",{class:"hist"},el("h2",null,"Các lần làm gần đây"),
+      el("ul",null,h.slice(0,8).map(x=>el("li",null,el("span",{class:"muted"},fmt(x.t)),el("strong",null,x.score+"/"+x.total))))):null
+  ));
+}
+
+function answered(){return S.ans.filter(a=>a!==null).length}
+
+function renderQuiz(){
+  const it=S.items[S.cur], n=S.items.length, a=answered();
+  const top=el("div",{class:"top"},
+    el("div",{class:"top-row"},el("span",null,"Câu "+(S.cur+1)+"/"+n),el("span",{class:"muted"},"Đã làm "+a+"/"+n)),
+    el("div",{class:"bar"},el("i",{style:"width:"+(a/n*100)+"%"})));
+  const opts=el("div",{class:"opts",role:"radiogroup"},it.opts.map((o,i)=>
+    el("button",{class:"opt"+(S.ans[S.cur]===i?" sel":""),role:"radio","aria-checked":S.ans[S.cur]===i,onclick:()=>{S.ans[S.cur]=i;renderQuiz(true)}},
+      el("span",{class:"l"},LET[i]),el("span",{class:"tx"},o.t))));
+  const grid=el("div",{class:"grid"},S.items.map((_,i)=>
+    el("button",{class:(S.ans[i]!==null?"done ":"")+(i===S.cur?"cur":""),"aria-label":"Câu "+(i+1),onclick:()=>{S.cur=i;renderQuiz()}},String(i+1))));
+  const y=window.scrollY;
+  mount(top,
+    el("div",{class:"qn"},"Câu "+(S.cur+1)),
+    el("h2",{class:"qt"},it.q),opts,
+    el("div",{class:"nav"},
+      el("button",{class:"btn",disabled:S.cur===0,onclick:()=>{S.cur--;renderQuiz()}},"← Câu trước"),
+      el("button",{class:"btn",disabled:S.cur===n-1,onclick:()=>{S.cur++;renderQuiz()}},"Câu sau →")),
+    el("div",{class:"navbar"},el("strong",null,"Danh sách câu"),grid,
+      el("button",{class:"btn primary",onclick:askSubmit},"Nộp bài")));
+  if(arguments[0]) window.scrollTo(0,y);
+}
+
+function askSubmit(){
+  const left=S.items.length-answered();
+  const close=()=>scrim.remove();
+  const scrim=el("div",{class:"scrim"},el("div",{class:"modal",role:"dialog","aria-modal":"true"},
+    el("h2",{style:"font-size:20px"},"Nộp bài?"),
+    el("p",{class:"muted",style:"margin:0"},left?("Còn "+left+" câu chưa trả lời. Các câu này tính là sai."):"Bạn đã trả lời đủ 80 câu."),
+    el("div",{class:"row"},
+      el("button",{class:"btn primary",onclick:()=>{close();submit()}},"Nộp bài"),
+      el("button",{class:"btn",onclick:close},"Làm tiếp"))));
+  document.body.append(scrim);
+}
+
+let onlyWrong=false;
+function submit(){
+  const total=S.items.length;
+  const score=S.items.reduce((s,it,i)=>s+(S.ans[i]!==null&&it.opts[S.ans[i]].c?1:0),0);
+  S.score=score; saveHist({t:Date.now(),score,total}); onlyWrong=false; renderResult();
+}
+
+function renderResult(){
+  const total=S.items.length, score=S.score;
+  const wrongIdx=S.items.map((it,i)=>i).filter(i=>!(S.ans[i]!==null&&S.items[i].opts[S.ans[i]].c));
+  const list=(onlyWrong?wrongIdx:S.items.map((_,i)=>i)).map(i=>{
+    const it=S.items[i], ok=!wrongIdx.includes(i), a=S.ans[i];
+    return el("div",{class:"rv"},
+      el("span",{class:"tag "+(ok?"ok":"bad")},"Câu "+(i+1)+" · "+(ok?"Đúng":(a===null?"Chưa trả lời":"Sai"))),
+      el("h2",{class:"qt"},it.q),
+      el("div",{class:"opts"},it.opts.map((o,k)=>
+        el("div",{class:"opt"+(o.c?" ok":(a===k?" bad":""))},el("span",{class:"l"},LET[k]),el("span",{class:"tx"},o.t,o.c?"  ✓ Đáp án đúng":(a===k?"  ✗ Bạn chọn":""))))));
+  });
+  const pct=Math.round(score/total*100);
+  mount(el("div",{class:"res"},
+    el("div",{class:"muted"},"Kết quả"),
+    el("div",{class:"score"},score,el("small",null," / "+total)),
+    el("p",{class:"muted",style:"margin:0"},pct+"% đúng · "+wrongIdx.length+" câu sai hoặc bỏ trống"),
+    el("div",{class:"row"},
+      el("button",{class:"btn primary",onclick:start},"Làm lại toàn bộ"),
+      el("button",{class:"btn",onclick:renderHome},"Về trang đầu"),
+      el("button",{class:"btn","aria-pressed":onlyWrong,onclick:()=>{onlyWrong=!onlyWrong;renderResult()}},onlyWrong?"Hiện tất cả câu":"Chỉ hiện câu sai"))),
+    el("div",null,list.length?list:el("p",{class:"muted"},"Không có câu sai. Làm tốt lắm."))
+  );
+}
+renderHome();
+</script>
+
+</body></html>
